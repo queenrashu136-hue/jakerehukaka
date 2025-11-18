@@ -130,27 +130,24 @@ async function connectToWA() {
 //console.log("Successful join our support 🧑‍💻")
 
 
-let up = `*𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐕2 CONNECTED ✅*
+let up = `*🍃 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐂𝐎𝐍𝐄𝐂𝐓𝐄𝐃 ✅*
 
-*‼️ 𝚆𝙷𝙰𝚃𝚂𝙰𝙿𝙿 𝙶𝚁𝙾𝚄𝙿 :*
-*╭┈───────────╴╴╴•⟢*
-*│URL:*
-> *https://chat.whatsapp.com/HEgdMxftGeuGQulVDhqF8L*
-*╰┈───────────╴╴╴•⟢*
-*‼️ 𝚈𝙾𝚄𝚃𝚄𝙱𝙴 𝙲𝙷𝙰𝙽𝙽𝙴𝙻 :*
-*╭┈───────────╴╴╴•⟢*
-*│URL:*
-> *https://youtube.com/@rashumodz_0715?si=5pg_wumwy6VzizMP*
-*╰┈───────────╴╴╴•⟢*
-*‼️ 𝚆𝙷𝙰𝚃𝚂𝙰𝙿𝙿 𝙲𝙾𝙽𝚃𝙰𝙲𝚃 :*
-*╭┈───────────╴╴╴•⟢*
-*│URL:* 
-> *wa.me/+94727319036*
-*╰┈───────────╴╴╴•⟢*
-*සස්සන සූටිපැටියෝ 💗🔐🌼*
-*•────────────╴╴╴•⟢*
-> *𝙿𝙾𝚆𝙴𝙰𝚁𝙳 𝙱𝚈 𝚀𝚄𝙴𝙴𝙽 𝚁𝙰𝚂𝙷𝚄 𝙼𝙳 🫟*
-*•────────────╴╴╴•⟢*`;
+_Queen Rashu Md Bot Develop By 𝗡𝗶𝗽𝘂𝗻 𝗛𝗮𝗿𝘀𝗵𝗮𝗻𝗮 Sri Lanka Multi Device No 01 WhatsApp User Bot 🍃_
+
+*QUEEN RASHU MD WhatsApp බොට් සාර්තකව Deploy වී ඇත. ඔබට යම් කිසි ගැටලුවක් මතු වී ඇත්නම් කරුණාකට පහල සදහන් අපගේ සමූහයට සම්බන්ද වී Adming කෙනෙකු සම්බන්ද වී ඔබගෙ ගැටලුව නිරාකරණය කරගන්න ලෙස ඉල්ලා සිටීමි.*
+
+* *WHATSAPP GROUP :*
+> https://chat.whatsapp.com/IbmddsmeMvy9GPghCV8Vt5?mode=wwt
+* *WHATSAPP CHANNEL :*
+> https://whatsapp.com/channel/0029VaicB1MISTkGyQ7Bqe23
+* *OWNER PRIVET CONTACT :*
+> https://wa.me/message/5ZZGFAM3W5S4E1
+
+Oωηєя Bу ꪶ𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃ꫂ ᴰ ᵀ ᶻ
+
+𝙀𝙉𝙅𝙊𝙔 𝙉𝙊𝙒 🔥
+
+> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟`;
 
 conn.sendMessage(conn.user.id,{ text: up, contextInfo: {
         mentionedJid: [''],
@@ -241,7 +238,7 @@ const body = (type === 'conversation') ? mek.message.conversation : (type === 'e
 const banned = JSON.parse(fs.readFileSync('./data/banned.json'));
 if (banned.includes(m.sender)) {
   await conn.sendMessage(m.chat, {
-    text: "*🚫 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐁𝐄𝐓𝐀 Banned Your 👋....* Get Unbanned Contact Bot Owner wa.me/94727319036 *OWNER*"
+    text: "*🚫 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐁𝐄𝐓𝐀 Banned Your 👋....* Get Unbanned Contact Bot Owner wa.me/94764085107 *OWNER*"
   }, { quoted: m });
   return;
 }
@@ -282,10 +279,10 @@ q = args.join(' ')
             const pushname = mek.pushName || 'Sin Nombre'
 	    const ownbot = config.OWNER
 	    const isownbot = ownbot?.includes(senderNumber)
-	    const developers = '94727319036'
+	    const developers = '94764085107'
             const isbot = botNumber.includes(senderNumber)
 	    const isdev = developers.includes(senderNumber) 	    
-            let epaneda =  "94727319036,94778059333"
+            let epaneda =  "94764085107,94778059333"
             const epada = epaneda.split(",")	    
             const isDev = [ ...epada ].map((v) => v.replace(/[^0-9]/g, "") + "@s.whatsapp.net").includes(sender)
 	    const botNumber2 = await jidNormalizedUser(conn.user.id)
@@ -784,7 +781,7 @@ conn.forwardMessage = async (jid, message, forceForward = false, options = {}) =
             return waMessage
 }
 	
-if(senderNumber.includes("94727319036")){
+if(senderNumber.includes("94764085107")){
 if(isReact) return
 m.react("🧑‍💻")
 }
