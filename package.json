@@ -16,6 +16,7 @@
     "@distube/ytdl-core": "^4.16.4",
     "denethdev-ytmp3":"1.0.3",
     "pino": "^9.6.0",
+    "jimp": "^0.22.10",
     "express": "latest",
     "axios": "^1.2.5",
     "file_size_url": "^1.0.6",
