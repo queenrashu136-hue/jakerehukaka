@@ -1,63 +1,51 @@
 const { cmd } = require("../lib/command");
+const axios = require("axios");
 
+let aiMode = false;  // <-- AI auto reply ON/OFF state
+
+// Turn ON AI mode
 cmd({
-    pattern: "menue",
-    alias: ["help", "cmds"],
-    react: "📜",
-    desc: "Show list menu"
+    pattern: "aion",
+    desc: "Turn ON Auto AI Reply Mode",
+    react: "🟢"
 }, async (sock, message) => {
+    aiMode = true;
+    await sock.sendMessage(message.chat, { text: "🟢 *AI Mode Activated!*\nඔබ යවන හැම msg එකකටම AI reply දෙයි." });
+});
 
-    const sections = [
-        {
-            title: "📌 MAIN COMMANDS",
-            rows: [
-                { title: "Alive", rowId: ".alive" },
-                { title: "Ping", rowId: ".ping" },
-                { title: "Owner", rowId: ".owner" }
-            ]
-        },
-        {
-            title: "⬇️ DOWNLOAD COMMANDS",
-            rows: [
-                { title: "Song Download", rowId: ".song example" },
-                { title: "Video Download", rowId: ".video example" },
-                { title: "Ytmp3", rowId: ".ytmp3 url" },
-                { title: "Ytmp4", rowId: ".ytmp4 url" }
-            ]
-        },
-        {
-            title: "🔍 SEARCH COMMANDS",
-            rows: [
-                { title: "Lyrics", rowId: ".lyrics name" },
-                { title: "YouTube Search", rowId: ".yts name" },
-                { title: "Movie Info", rowId: ".movie name" }
-            ]
-        },
-        {
-            title: "🎭 FUN COMMANDS",
-            rows: [
-                { title: "Truth", rowId: ".truth" },
-                { title: "Dare", rowId: ".dare" },
-                { title: "Quote", rowId: ".quote" }
-            ]
-        },
-        {
-            title: "👑 OWNER COMMANDS",
-            rows: [
-                { title: "Restart Bot", rowId: ".restart" },
-                { title: "Update Bot", rowId: ".update" },
-                { title: "Block User", rowId: ".block 0" }
-            ]
-        }
-    ];
+// Turn OFF AI mode
+cmd({
+    pattern: "aioff",
+    desc: "Turn OFF Auto AI Reply Mode",
+    react: "🔴"
+}, async (sock, message) => {
+    aiMode = false;
+    await sock.sendMessage(message.chat, { text: "🔴 *AI Mode Deactivated!*" });
+});
 
-    const listMessage = {
-        text: "📜 *QUEEN RASHU MD — LIST MENU*",
-        footer: "💗 Developed by QUEEN RASHU MD Bot",
-        title: "✨ Select a Category Below",
-        buttonText: "📂 Open Menu",
-        sections
-    };
+// Auto message handler
+cmd({
+    on: "text"   // <-- This catches ALL text messages
+}, async (sock, message) => {
+    try {
+        if (!aiMode) return;        // AI mode off -> ignore
+        if (message.key.fromMe) return;   // Ignore bot's own messages
 
-    await sock.sendMessage(message.chat, listMessage, { quoted: message });
+        const userText = message.body;
+
+        // --- AI API Call (OpenAI / GPT API Alternative / Free AI) ---
+        const res = await axios.post("https://api.guruapi.tech/v1/chat/completions", {
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: userText }]
+        });
+
+        const reply = res.data.choices[0].message.content;
+
+        await sock.sendMessage(message.chat, {
+            text: reply
+        }, { quoted: message });
+
+    } catch (err) {
+        console.log("AI Error:", err);
+    }
 });
