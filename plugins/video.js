@@ -105,7 +105,7 @@ cmd(
                     from,
                     {
                         image: { url: thumb },
-                        caption: `🎬 *${videoInfo.title || query}*\nDownloading...`,
+                        caption: `*🎥 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 Video Dawnloder 💗*\n\n*📍 Title :* _${videoInfo.title || query}_ *📍 Duration :* _${video.timestamp}_\n\n> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟`,
                     },
                     { quoted: mek }
                 );
@@ -135,7 +135,7 @@ cmd(
                     video: { url: finalUrl },
                     mimetype: "video/mp4",
                     fileName: `${dl.title || videoInfo.title || "video"}.mp4`,
-                    caption: `🎬 *${dl.title || videoInfo.title || "Video"}*\n\n> _Downloaded by Knight Bot MD_`,
+                    caption: `🎬 *${dl.title || videoInfo.title || "Video"}*\n\n> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟`,
                 },
                 { quoted: mek }
             );
