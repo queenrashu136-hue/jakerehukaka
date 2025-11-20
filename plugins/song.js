@@ -26,36 +26,25 @@ async function tryRequest(getter, attempts = 3) {
     throw lastErr;
 }
 
-// Izumi primary (URL)
+// Izumi primary
 async function izumiByUrl(url) {
-    const api = `https://izumiiiiiiii.dpdns.org/downloader/youtube?url=${encodeURIComponent(
-        url
-    )}&format=mp3`;
-
+    const api = `https://izumiiiiiiii.dpdns.org/downloader/youtube?url=${encodeURIComponent(url)}&format=mp3`;
     const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
     if (res?.data?.result?.download) return res.data.result;
-
     throw new Error("Izumi URL failed");
 }
 
-// Izumi secondary (query)
+// Izumi secondary search
 async function izumiByQuery(q) {
-    const api = `https://izumiiiiiiii.dpdns.org/downloader/youtube-play?query=${encodeURIComponent(
-        q
-    )}`;
-
+    const api = `https://izumiiiiiiii.dpdns.org/downloader/youtube-play?query=${encodeURIComponent(q)}`;
     const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
     if (res?.data?.result?.download) return res.data.result;
-
     throw new Error("Izumi Query failed");
 }
 
 // Okatsu fallback
 async function okatsu(url) {
-    const api = `https://okatsu-rolezapiiz.vercel.app/downloader/ytmp3?url=${encodeURIComponent(
-        url
-    )}`;
-
+    const api = `https://okatsu-rolezapiiz.vercel.app/downloader/ytmp3?url=${encodeURIComponent(url)}`;
     const res = await tryRequest(() => axios.get(api, AXIOS_DEFAULTS));
     if (res?.data?.dl) {
         return {
@@ -64,11 +53,10 @@ async function okatsu(url) {
             thumbnail: res.data.thumb,
         };
     }
-
     throw new Error("Okatsu failed");
 }
 
-// Main Command
+// MAIN COMMAND
 cmd(
     {
         pattern: "song",
@@ -93,12 +81,12 @@ cmd(
                 video = s.videos[0];
             }
 
-            // Send Info First
+            // Send info card
             await bot.sendMessage(
                 from,
                 {
                     image: { url: video.thumbnail },
-                    caption: `🎧 *Downloading...*\n\n📌 *${video.title}*\n⏱ *${video.timestamp}*`,
+                    caption: `*🎧 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 Song Downloader 💗*\n\n*📍 Title:* _${video.title}_\n*📍 Duration:* _${video.timestamp}_\n\n> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 🫟`,
                 },
                 { quoted: mek }
             );
@@ -107,17 +95,17 @@ cmd(
             let dl;
             try {
                 dl = await izumiByUrl(video.url);
-            } catch (e1) {
+            } catch {
                 try {
                     dl = await izumiByQuery(video.title);
-                } catch (e2) {
+                } catch {
                     dl = await okatsu(video.url);
                 }
             }
 
             const finalUrl = dl.download || dl.dl || dl.url;
 
-            // Send MP3
+            // Send Audio (Play)
             await bot.sendMessage(
                 from,
                 {
@@ -129,7 +117,18 @@ cmd(
                 { quoted: mek }
             );
 
-            reply("✅ *Song downloaded successfully!* 🎵");
+            // Send as Document (File)
+            await bot.sendMessage(
+                from,
+                {
+                    document: { url: finalUrl },
+                    mimetype: "audio/mpeg",
+                    fileName: `${dl.title || video.title}.mp3`,
+                },
+                { quoted: mek }
+            );
+
+            reply("*🎧 Song Download Success (Audio + Document) ...✅*");
 
         } catch (err) {
             console.error("Song Error:", err);
