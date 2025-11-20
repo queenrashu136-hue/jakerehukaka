@@ -29,7 +29,7 @@ async function tryRequest(getter, attempts = 3) {
     throw lastErr;
 }
 
-// Izumi video by URL (720p)
+// Izumi 720p downloader
 async function getIzumiVideoByUrl(youtubeUrl) {
     const apiUrl = `${izumi.baseURL}/downloader/youtube?url=${encodeURIComponent(
         youtubeUrl
@@ -77,11 +77,11 @@ cmd(
             let videoUrl = "";
             let videoInfo = {};
 
-            // If it's a URL
+            // If input is a URL
             if (query.startsWith("http://") || query.startsWith("https://")) {
                 videoUrl = query;
             } else {
-                // Search video
+                // Search YouTube
                 const s = await yts(query);
                 if (!s?.videos?.length) return reply("❌ No videos found!");
 
@@ -89,7 +89,7 @@ cmd(
                 videoUrl = videoInfo.url;
             }
 
-            // Extract thumbnail
+            // Thumbnail handling
             let thumb = videoInfo.thumbnail;
             let ytId =
                 (videoUrl.match(
@@ -99,25 +99,25 @@ cmd(
             if (!thumb && ytId)
                 thumb = `https://i.ytimg.com/vi/${ytId}/sddefault.jpg`;
 
-            // Send thumbnail + caption
+            // Send Thumbnail
             if (thumb) {
                 await bot.sendMessage(
                     from,
                     {
                         image: { url: thumb },
-                        caption: `*🎥 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 Video Dawnloder 💗*\n\n*📍 Title :* _${videoInfo.title || query}_ *📍 Duration :* _${video.timestamp}_\n\n> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟`,
+                        caption: `*🎥 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 Video Downloader 💗*\n\n*📍 Title :* _${videoInfo.title || query}_\n\n> Powered by 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃`,
                     },
                     { quoted: mek }
                 );
             }
 
-            // Validate YouTube
+            // Validate YouTube URL
             let valid = videoUrl.match(
                 /(?:https?:\/\/)?(?:youtu\.be\/|youtube\.com\/)([\S]+)/
             );
             if (!valid) return reply("❌ Not a valid YouTube link!");
 
-            // Download video (Izumi → Okatsu fallback)
+            // Download system
             let dl;
             try {
                 dl = await getIzumiVideoByUrl(videoUrl);
@@ -125,22 +125,37 @@ cmd(
                 dl = await getOkatsuVideoByUrl(videoUrl);
             }
 
-            // Final download link
             const finalUrl = dl.download;
 
-            // Send MP4
+            // ================================
+            // SEND NORMAL VIDEO (MP4)
+            // ================================
             await bot.sendMessage(
                 from,
                 {
                     video: { url: finalUrl },
                     mimetype: "video/mp4",
                     fileName: `${dl.title || videoInfo.title || "video"}.mp4`,
-                    caption: `🎬 *${dl.title || videoInfo.title || "Video"}*\n\n> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟`,
+                    caption: `🎬 *${dl.title || videoInfo.title || "Video"}*\n\n> Powered by 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃`,
                 },
                 { quoted: mek }
             );
 
-            reply("✅ *Video downloaded successfully!*");
+            // ================================
+            // SEND DOCUMENT VERSION (MP4)
+            // ================================
+            await bot.sendMessage(
+                from,
+                {
+                    document: { url: finalUrl },
+                    mimetype: "video/mp4",
+                    fileName: `${dl.title || videoInfo.title || "video"}.mp4`,
+                    caption: `📦 *Document Version*\n\n🎬 ${dl.title || videoInfo.title}`,
+                },
+                { quoted: mek }
+            );
+
+            reply("✅ *Video & Document sent successfully!*");
 
         } catch (e) {
             console.error("[VIDEO ERROR]:", e.message);
