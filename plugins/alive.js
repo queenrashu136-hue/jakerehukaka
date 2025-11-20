@@ -41,7 +41,7 @@ async (conn, mek, m, { from, pushname, reply }) => {
                             title: "𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃",
                             body: "© ᴅᴇᴠᴇʟᴏᴘ ʙʏ ɴɪᴘᴜɴ ʜᴀʀꜱʜᴀɴᴀ",
                             mediaType: 1,
-                            thumbnailUrl: "https://i.ibb.co/7N087ZHh/Queen-Rashu-Md.jpg",
+                            thumbnailUrl: "https://files.catbox.moe/l74kdf.jpg",
                             sourceUrl: "https://github.com/CyberRushModz0",
                             renderLargerThumbnail: true
                         }
@@ -140,7 +140,7 @@ await conn.sendMessage(from, {
     ],
     headerType: 1,
     viewOnce: true,
-    image: { url: "https://i.ibb.co/7N087ZHh/Queen-Rashu-Md.jpg" },
+    image: { url: "https://files.catbox.moe/l74kdf.jpg" },
     caption: des,
 }, { quoted: fakeQuoted });
 
