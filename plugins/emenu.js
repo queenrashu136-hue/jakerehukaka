@@ -1,67 +1,99 @@
 const { cmd } = require("../lib/command");
 const axios = require("axios");
 
-let aiMode = false;
-
-let aiStyle = `
-🤖 *RASHU AI RESPONSE*  
-━━━━━━━━━━
-{reply}
-━━━━━━━━━━
-`; 
-
 cmd({
-    pattern: "aion",
-    react: "🟢"
-}, async (sock, message) => {
-    aiMode = true;
-    await sock.sendMessage(message.chat, { text: "🟢 *AI Mode Activated!*" });
-});
-
-cmd({
-    pattern: "aioff",
-    react: "🔴"
-}, async (sock, message) => {
-    aiMode = false;
-    await sock.sendMessage(message.chat, { text: "🔴 *AI Mode Deactivated!*" });
-});
-
-cmd({
-    pattern: "aistyle",
-}, async (sock, message, args) => {
-    if (!args) return sock.sendMessage(message.chat, { text: "Use: .aistyle your style {reply}" });
-    aiStyle = args;
-    await sock.sendMessage(message.chat, { text: "✨ *AI Style Updated!*" });
-});
-
-// -------------------------------
-// AUTO AI LISTENER (FIXED)
-// -------------------------------
-cmd({
-    on: "message"
+    pattern: "ninfo",
+    desc: "Get number information",
+    use: "<number>",
+    react: "📱"
 }, 
-async (sock, message) => {
+async (sock, message, args) => {
 
     try {
-        if (!aiMode) return;
-        if (message.key.fromMe) return;
-        
-        let userText = message.body || message.message?.conversation;
-        if (!userText) return;
+        const num = args.replace(/[^0-9]/g, "");
+        if (!num || num.length < 8) {
+            return await sock.sendMessage(message.chat, {
+                text: "❗ *Usage:* .ninfo 947xxxxxxxx"
+            });
+        }
 
-        const res = await axios.post("https://api.guruapi.tech/v1/chat/completions", {
-            model: "gpt-4o-mini",
-            messages: [{ role: "user", content: userText }]
-        });
+        const jid = num + "@s.whatsapp.net";
 
-        const aiReply = res.data.choices[0].message.content;
-        
-        const final = aiStyle.replace("{reply}", aiReply);
+        // -----------------------
+        // 1️⃣ NUMBER VALIDITY + COUNTRY CHECK
+        // -----------------------
+        const lookup = await axios.get(`https://numlookupapi.com/api/validate/${num}?apikey=free`);
 
-        await sock.sendMessage(message.chat, { text: final }, { quoted: message });
+        const country = lookup.data.country_name || "Unknown";
+        const carrier = lookup.data.carrier || "Unknown";
+        const valid = lookup.data.valid ? "Yes" : "No";
+
+        // -----------------------
+        // 2️⃣ WHATSAPP ACCOUNT EXISTS?
+        // -----------------------
+        let exists = false;
+        try {
+            exists = await sock.onWhatsApp(num);
+            exists = exists[0]?.exists ? "Yes" : "No";
+        } catch {
+            exists = "Unknown";
+        }
+
+        // -----------------------
+        // 3️⃣ SAVED CONTACT NAME (YOUR PHONE)
+        // -----------------------
+        let savedName = "Not saved";
+        try {
+            const cont = await sock.getName(jid);
+            if (cont) savedName = cont;
+        } catch {}
+
+        // -----------------------
+        // 4️⃣ PROFILE PIC EXISTS?
+        // -----------------------
+        let dp = "No";
+        try {
+            const pp = await sock.profilePictureUrl(jid, "image");
+            if (pp) dp = "Yes";
+        } catch {
+            dp = "No";
+        }
+
+        // -----------------------
+        // 5️⃣ BLOCK DETECTION (Partial)
+        // -----------------------
+        let blocked = "Cannot verify";
+        try {
+            // If cannot fetch pp, lastSeen, status -> maybe blocked
+            if (dp === "No") blocked = "Possible";
+            else blocked = "No";
+        } catch {}
+
+        // -----------------------
+        // FINAL OUTPUT
+        // -----------------------
+        const text = `
+📱 *WHATSAPP NUMBER INFO*
+
+• 🌍 *Country:* ${country}
+• 🏢 *Carrier:* ${carrier}
+• ✔️ *Valid Number:* ${valid}
+
+• 💬 *WhatsApp Account:* ${exists}
+• 📝 *Saved Name (Your Phone):* ${savedName}
+• 🖼️ *Profile Picture:* ${dp}
+• 🚫 *Blocked You:* ${blocked}
+
+• 🔢 *JID:* ${jid}
+
+━━━━━━━━━━━━━━
+💗 *QUEEN RASHU MD — Number Info Tool*
+        `.trim();
+
+        await sock.sendMessage(message.chat, { text }, { quoted: message });
 
     } catch (e) {
-        console.log("AI ERROR", e);
+        console.log("ninfo error:", e);
+        await sock.sendMessage(message.chat, { text: "❌ Error processing number." });
     }
-
 });
