@@ -2,54 +2,55 @@ const { cmd } = require("../lib/command");
 
 cmd({
     pattern: "hack",
-    desc: "Fake WhatsApp Hacking Progress",
+    desc: "Extreme Fast Fake Hacking for 5 Minutes",
     category: "fun",
-}, async (sock, message, args) => {
+}, async (sock, message) => {
 
     const jid = message.key.remoteJid;
 
-    // Hacking progress messages
     const steps = [
-        "Initializing Hack Tool…",
+        "Injecting Malware Script…",
         "Bypassing WhatsApp Firewall…",
-        "Connecting to Target Server…",
-        "Extracting Session Tokens…",
-        "Accessing Encrypted Databases…",
-        "Decrypting Messages…",
-        "Extracting Images…",
-        "Injecting Spy Script…",
-        "Fetching Live Chat Data…",
-        "Tracking Last Seen…",
-        "Accessing Camera…",
-        "Processing Audio Messages…",
-        "Cracking Backup Password…",
+        "Extracting Login Tokens…",
+        "Decrypting WhatsApp Database…",
+        "Accessing Gallery Photos…",
+        "Collecting Contact List…",
+        "Cracking Encryption Keys…",
+        "Syncing Cloud Backup…",
+        "Stealing All Passwords…",
         "Uploading Data to Server…",
-        "Finalizing Hack…",
+        "Tracking Device Location…",
+        "Activating Remote Camera…",
+        "Injecting Spyware…",
+        "Extracting Chat Backup…"
     ];
 
-    let index = 0;
+    // Start message
+    await sock.sendMessage(jid, { 
+        text: "🟢 *EXTREME HACK MODE STARTED*\n⚡ Speed: 20ms\n⏳ Duration: 5 Minutes\n\n🔥 Brace Yourself!" 
+    });
 
-    // Send every 10 seconds
-    const interval = setInterval(async () => {
+    const start = Date.now();
+    const limit = 5 * 60 * 1000; // 5 minutes
 
-        if (index >= steps.length) {
-            clearInterval(interval);
+    const spamFast = async () => {
 
-            // Final Message with QUEEN RASHU MD
-            return await sock.sendMessage(jid, { 
-                text: "✅ *Hack Completed Successfully!*\n\n🔥 *QUEEN RASHU MD* 🔥"
+        // Time over: send final message
+        if (Date.now() - start >= limit) {
+            await sock.sendMessage(jid, { 
+                text: "✅ *Hack Completed Successfully!*\n\n🔥 QUEEN RASHU MD 🔥"
             });
+            return;
         }
 
-        await sock.sendMessage(jid, { 
-            text: `🟢 *HACK PROGRESS*\n\n${steps[index]}` 
-        });
+        // Pick random hack message
+        const msg = steps[Math.floor(Math.random() * steps.length)];
 
-        index++;
+        await sock.sendMessage(jid, { text: `🟡 ${msg}` });
 
-    }, 10000); // 5 minutes total
+        // 20ms speed (EXTREME)
+        setTimeout(spamFast, 20);
+    };
 
-    await sock.sendMessage(jid, { 
-        text: "🔐 *Fake Hacking Started...*\nPlease wait 5 minutes! 🔥"
-    });
+    spamFast();
 });
