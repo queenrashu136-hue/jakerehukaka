@@ -2,44 +2,54 @@ const { cmd } = require("../lib/command");
 
 cmd({
     pattern: "hack",
-    desc: "Fake hacking prank",
-    react: "💀"
-}, async (sock, message) => {
-    try {
-        const target = message.mentionedJid?.[0] 
-            || message.quoted?.sender 
-            || null;
+    desc: "Fake WhatsApp Hacking Progress",
+    category: "fun",
+}, async (sock, message, args) => {
 
-        if (!target) {
-            return message.reply("❗ Reply to a message or mention someone to hack.\n\nUsage:\n.hack @user");
+    const jid = message.key.remoteJid;
+
+    // Hacking progress messages
+    const steps = [
+        "Initializing Hack Tool…",
+        "Bypassing WhatsApp Firewall…",
+        "Connecting to Target Server…",
+        "Extracting Session Tokens…",
+        "Accessing Encrypted Databases…",
+        "Decrypting Messages…",
+        "Extracting Images…",
+        "Injecting Spy Script…",
+        "Fetching Live Chat Data…",
+        "Tracking Last Seen…",
+        "Accessing Camera…",
+        "Processing Audio Messages…",
+        "Cracking Backup Password…",
+        "Uploading Data to Server…",
+        "Finalizing Hack…",
+    ];
+
+    let index = 0;
+
+    // Send every 10 seconds
+    const interval = setInterval(async () => {
+
+        if (index >= steps.length) {
+            clearInterval(interval);
+
+            // Final Message with QUEEN RASHU MD
+            return await sock.sendMessage(jid, { 
+                text: "✅ *Hack Completed Successfully!*\n\n🔥 *QUEEN RASHU MD* 🔥"
+            });
         }
 
-        const chat = message.chat;
+        await sock.sendMessage(jid, { 
+            text: `🟢 *HACK PROGRESS*\n\n${steps[index]}` 
+        });
 
-        // Fake progress messages
-        const steps = [
-            "🔍 Initializing hack engine...",
-            "📡 Connecting to WhatsApp servers...",
-            "🛰️ Bypassing security layers...",
-            `🧠 Target ID detected: *${target.split("@")[0]}*`,
-            "📁 Fetching encrypted data...",
-            "🔓 Decrypting messages...",
-            "📥 Downloading files...",
-            "☣️ Injecting RAT tool...",
-            "📡 Uploading payload...",
-            "⚠️ Breach detected… Firewall bypassed!",
-            "💾 Extracting full data dump...",
-            "🟢 HACK COMPLETE!\n\n🔥 *Target Fully Hacked Successfully!*"
-        ];
+        index++;
 
-        // Send steps one by one with delay
-        for (let x of steps) {
-            await sock.sendMessage(chat, { text: x });
-            await new Promise(res => setTimeout(res, 1200)); // 1.2 sec delay
-        }
+    }, 10000); // 5 minutes total
 
-    } catch (e) {
-        console.log(e);
-        message.reply("❌ Error running fake hack.");
-    }
+    await sock.sendMessage(jid, { 
+        text: "🔐 *Fake Hacking Started...*\nPlease wait 5 minutes! 🔥"
+    });
 });
