@@ -1,38 +1,45 @@
 const { cmd } = require("../lib/command");
 
 cmd({
-    pattern: "sendnb",
-    desc: "Send message to any WhatsApp number",
-    category: "tools",
-    use: ".sendnb <number> <message>"
-}, async (conn, message, { args }) => {
-
-    if (args.length < 2) {
-        return message.reply("❌ Usage: .sendnb <number> <message>");
-    }
-
-    // Number get
-    const number = args[0].replace(/[^0-9]/g, "");
-
-    if (!number) {
-        return message.reply("❌ Invalid number!");
-    }
-
-    // Join message text
-    const msgText = args.slice(1).join(" ");
-
+    pattern: "hack",
+    desc: "Fake hacking prank",
+    react: "💀"
+}, async (sock, message) => {
     try {
-        // Convert number to JID
-        const jid = number + "@s.whatsapp.net";
+        const target = message.mentionedJid?.[0] 
+            || message.quoted?.sender 
+            || null;
 
-        // Send message
-        await conn.sendMessage(jid, { text: msgText });
+        if (!target) {
+            return message.reply("❗ Reply to a message or mention someone to hack.\n\nUsage:\n.hack @user");
+        }
 
-        // Reply success to user
-        return message.reply(`✅ Message sent to +${number}\n\n📨 Text: ${msgText}`);
+        const chat = message.chat;
 
-    } catch (err) {
-        console.error(err);
-        return message.reply("❌ Error sending message!");
+        // Fake progress messages
+        const steps = [
+            "🔍 Initializing hack engine...",
+            "📡 Connecting to WhatsApp servers...",
+            "🛰️ Bypassing security layers...",
+            `🧠 Target ID detected: *${target.split("@")[0]}*`,
+            "📁 Fetching encrypted data...",
+            "🔓 Decrypting messages...",
+            "📥 Downloading files...",
+            "☣️ Injecting RAT tool...",
+            "📡 Uploading payload...",
+            "⚠️ Breach detected… Firewall bypassed!",
+            "💾 Extracting full data dump...",
+            "🟢 HACK COMPLETE!\n\n🔥 *Target Fully Hacked Successfully!*"
+        ];
+
+        // Send steps one by one with delay
+        for (let x of steps) {
+            await sock.sendMessage(chat, { text: x });
+            await new Promise(res => setTimeout(res, 1200)); // 1.2 sec delay
+        }
+
+    } catch (e) {
+        console.log(e);
+        message.reply("❌ Error running fake hack.");
     }
 });
