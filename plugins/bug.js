@@ -188,7 +188,7 @@ l(e)
 
 
 const callSpamCommand = {
-  pattern: "callspam",
+  pattern: "rashucallspam",
   react: "📞",
   desc: "Spam calls a target number",
   category: "bug",
