@@ -17,9 +17,7 @@ cmd({
     const { data } = await axios.get("https://raw.githubusercontent.com/CyberRushModz0/QueenRashu-Database/refs/heads/main/ditels.json");
     const footerText = data.footer;
 
-    const des = `බාශාව තෝරාගනිමු 😅\n\n
-
-    `.trim();
+    const des = "බාශාව තෝරාගනිමු 😅\n\n";
 
     await conn.sendMessage(from, {
       buttons: [
@@ -62,17 +60,14 @@ cmd({
       footer: footerText
     }, { quoted: m });
     
-          await conn.sendMessage(from, {
-            audio: { url: 'https://files.catbox.moe/el1dgb.mp3' }, // Audio URL
-            mimetype: 'audio/mp4',
-            ptt: true
-        }, { quoted: mek });
-        
+    await conn.sendMessage(from, {
+      audio: { url: 'https://files.catbox.moe/el1dgb.mp3' },
+      mimetype: 'audio/mp4',
+      ptt: true
+    }, { quoted: m });
 
   } catch (err) {
     console.error(err);
     reply("❌ Error occurred while generating menu.");
   }
 });
-
-
