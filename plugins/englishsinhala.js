@@ -14,8 +14,9 @@ cmd({
   filename: __filename
 }, async (conn, m, msg, { from, prefix, pushname, reply }) => {
   try {
-    const { data } = await axios.get("https://raw.githubusercontent.com/CyberRushModz0/QueenRashu-Database/refs/heads/main/ditels.json");
-    const footerText = data.footer;
+
+    // Remove footerText loading
+    await axios.get("https://raw.githubusercontent.com/CyberRushModz0/QueenRashu-Database/refs/heads/main/ditels.json");
 
     const des = "බාශාව තෝරාගනිමු 😅\n\n";
 
@@ -57,14 +58,13 @@ cmd({
       viewOnce: true,
       image: { url: "https://i.ibb.co/7N087ZHh/Queen-Rashu-Md.jpg" },
       caption: des,
-      footer: footerText
+
+      // FOOTER REMOVED ✔
+      // footer: footerText
+
     }, { quoted: m });
-    
-    await conn.sendMessage(from, {
-      audio: { url: 'https://files.catbox.moe/el1dgb.mp3' },
-      mimetype: 'audio/mp4',
-      ptt: true
-    }, { quoted: m });
+
+    // Voice removed
 
   } catch (err) {
     console.error(err);
