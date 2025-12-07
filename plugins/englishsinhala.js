@@ -18,7 +18,7 @@ cmd({
     // Database footer remove
     await axios.get("https://raw.githubusercontent.com/CyberRushModz0/QueenRashu-Database/refs/heads/main/ditels.json");
 
-    const des = "බාශාව තෝරාගනිමු 😅\n\n";
+    const des = "*📖 𝐒𝐄𝐋𝐄𝐂𝐓 𝐘𝐎𝐔𝐑 𝐋𝐀𝐍𝐆𝐔𝐀𝐆𝐄 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃....*\n\n* *කරුණාකර පහත Select Language Button එක ස්පර්ශ කරන්න.*\n\n* *Please touch the Select Language Button below.*\n\n* *कृपया नीचे भाषा चुनें बटन स्पर्श करें।*\n\n* *கீழே உள்ள மொழியைத் தேர்ந்தெடு பொத்தானைத் தொடவும்.*\n\n> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟";
 
     await conn.sendMessage(from, {
       buttons: [
@@ -29,21 +29,31 @@ cmd({
           nativeFlowInfo: {
             name: 'single_select',
             paramsJson: JSON.stringify({
-              title: '𝐂𝐋𝐈𝐂𝐊 𝐇𝐄𝐑𝐄 📂',
+              title: 'SELECT LANGUAGE',
               sections: [
                 {
                   title: `‼️𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ❤️‍🩹`,
                   highlight_label: '',
                   rows: [
                     {
-                      title: 'SINHALA',
-                      description: 'Bot All Sinhala',
-                      id: `${prefix}alive`,
+                      title: 'සිංහල',
+                      description: 'සියල්ල සින්හල භාශාවෙන්',
+                      id: `${prefix}sinhalarashu`,
                     },
                     {
                       title: 'ENGLISH',
-                      description: 'Bot All English',
-                      id: `${prefix}menu`,
+                      description: 'All In English',
+                      id: `${prefix}englishrashu`,
+                    },
+                    {
+                      title: 'हिंदी',
+                      description: 'सब हिंदी में',
+                      id: `${prefix}hindirashu`,
+                    },
+                    {
+                      title: 'தமிழ்',
+                      description: 'அனைத்தும் தமிழில்',
+                      id: `${prefix}thamilrashu`,
                     },
                   ],
                 },
