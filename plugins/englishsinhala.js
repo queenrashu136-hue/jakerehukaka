@@ -15,7 +15,7 @@ cmd({
 }, async (conn, m, msg, { from, prefix, pushname, reply }) => {
   try {
 
-    // Remove footerText loading
+    // Database footer remove
     await axios.get("https://raw.githubusercontent.com/CyberRushModz0/QueenRashu-Database/refs/heads/main/ditels.json");
 
     const des = "බාශාව තෝරාගනිමු 😅\n\n";
@@ -24,9 +24,7 @@ cmd({
       buttons: [
         {
           buttonId: 'action',
-          buttonText: {
-            displayText: '📂 Menu Options'
-          },
+          buttonText: { displayText: '📂 Menu Options' },
           type: 4,
           nativeFlowInfo: {
             name: 'single_select',
@@ -56,15 +54,18 @@ cmd({
       ],
       headerType: 1,
       viewOnce: true,
-      image: { url: "https://i.ibb.co/7N087ZHh/Queen-Rashu-Md.jpg" },
+
+      // ⭐ NEW CUSTOM IMAGE⭐
+      image: { url: "https://files.catbox.moe/l74kdf.jpg" },
+
       caption: des,
 
-      // FOOTER REMOVED ✔
+      // Footer removed ✔
       // footer: footerText
 
     }, { quoted: m });
 
-    // Voice removed
+    // Voice removed ✔
 
   } catch (err) {
     console.error(err);
