@@ -16,7 +16,7 @@ cmd({
   try {
     const { data } = await axios.get("https://raw.githubusercontent.com/CyberRushModz0/QueenRashu-Database/refs/heads/main/ditels.json");
     const footerText = data.footer;
-    const logoUrl = data.logo || "https://i.ibb.co/7N087ZHh/Queen-Rashu.jpg";
+    const logoUrl = data.logo || "https://files.catbox.moe/l74kdf.jpg";
 
     const des = `*📜 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐁𝐄𝐓𝐀 Menu List ...*
 *👋 Hye ${pushname} Manika .....❤️‍🩹🫂🪄*
