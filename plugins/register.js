@@ -2,170 +2,150 @@ const fs = require("fs");
 const path = require("path");
 const { cmd } = require("../lib/command");
 
-// Database Path
-const dbPath = path.join(__dirname, "../data/users.json");
+// Database path
+const dbPath = path.join(__dirname, "../database/user.json");
 
-// Create DB if not exists
+// Create DB file if missing
 if (!fs.existsSync(dbPath)) {
-    fs.writeFileSync(dbPath, JSON.stringify([]));
+    fs.writeFileSync(dbPath, JSON.stringify({ users: [] }, null, 2));
 }
 
 // Helpers
 const loadDB = () => JSON.parse(fs.readFileSync(dbPath));
 const saveDB = (data) => fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 
+// Only allowed number
+const allowedNumber = "94764085107"; // 0764085107
 
-// ==================================================
-// 📌 1. REGISTER COMMAND
-// ==================================================
+// ============================================
+// 1️⃣ REGISTER
+// ============================================
 cmd({
     pattern: "register",
-    desc: "Register a new user",
+    desc: "Register new user (only allowed number)",
     category: "main",
-    use: ".register Name Age Gender"
-}, async (conn, m, msg, { args, reply }) => {
+}, async (bot, m, args) => {
 
-    if (args.length < 3)
-        return reply("❌ Usage: .register Name Age Gender\n\nExample:\n.register Rashu 20 Female");
+    const senderNumber = m.sender.split("@")[0];
+    if (senderNumber !== allowedNumber)
+        return bot.sendMessage(m.from, { text: "❌ You are not allowed to register." }, { quoted: m });
 
-    const [name, age, gender] = args;
-    const user = m.sender;
     const db = loadDB();
 
-    if (db.find(u => u.user === user))
-        return reply("⚠️ You are already registered!\nUse: .myinfo");
+    if (db.users.find(u => u.number === senderNumber))
+        return bot.sendMessage(m.from, { text: "⚠️ You are already registered!" }, { quoted: m });
 
     const newUser = {
-        user,
-        name,
-        age,
-        gender,
-        time: Date.now()
+        number: senderNumber,
+        name: args[0] || m.pushName || "NoName",
+        age: args[1] || "N/A",
+        gender: args[2] || "N/A",
+        regTime: Date.now()
     };
 
-    db.push(newUser);
+    db.users.push(newUser);
     saveDB(db);
 
-    reply(
-`✅ *Registration Complete!*
-
-👤 Name: *${name}*
-🎂 Age: *${age}*
-⚧️ Gender: *${gender}*
-📲 User: @${user.split("@")[0]}
-
-Welcome to Queen Rashu MD ❤️🔥`
-    );
+    bot.sendMessage(m.from, {
+        text: `✅ Registration Successful!\n\n👤 Name: ${newUser.name}\n🎂 Age: ${newUser.age}\n⚧️ Gender: ${newUser.gender}\n📲 Number: ${senderNumber}\n🕒 Time: ${new Date(newUser.regTime).toLocaleString()}`
+    }, { quoted: m });
 });
 
 
-// ==================================================
-// 📌 2. MYINFO (View Your Details)
-// ==================================================
+// ============================================
+// 2️⃣ MYINFO
+// ============================================
 cmd({
     pattern: "myinfo",
-    desc: "View your register info",
+    desc: "View your registration info",
     category: "main",
-    use: ".myinfo"
-}, async (conn, m, msg, { reply }) => {
+}, async (bot, m) => {
 
-    const user = m.sender;
+    const senderNumber = m.sender.split("@")[0];
+    if (senderNumber !== allowedNumber)
+        return bot.sendMessage(m.from, { text: "❌ You are not allowed." }, { quoted: m });
+
     const db = loadDB();
+    const data = db.users.find(u => u.number === senderNumber);
 
-    const data = db.find(x => x.user === user);
-    if (!data) return reply("❌ You are not registered!\nUse: .register Name Age Gender");
+    if (!data) return bot.sendMessage(m.from, { text: "❌ You are not registered!" }, { quoted: m });
 
-    reply(
-`🪪 *YOUR PROFILE INFO*
-
-👤 Name: *${data.name}*
-🎂 Age: *${data.age}*
-⚧️ Gender: *${data.gender}*
-📲 Number: @${data.user.split("@")[0]}
-⏱️ Registered On: *${new Date(data.time).toLocaleString()}*
-`
-    );
+    bot.sendMessage(m.from, {
+        text: `🪪 YOUR PROFILE INFO\n\n👤 Name: ${data.name}\n🎂 Age: ${data.age}\n⚧️ Gender: ${data.gender}\n📲 Number: ${data.number}\n⏱️ Registered On: ${new Date(data.regTime).toLocaleString()}`
+    }, { quoted: m });
 });
 
 
-// ==================================================
-// 📌 3. UNREGISTER (Delete Yourself)
-// ==================================================
+// ============================================
+// 3️⃣ UNREGISTER
+// ============================================
 cmd({
     pattern: "unregister",
-    desc: "Remove your register data",
+    desc: "Delete your registration",
     category: "main",
-    use: ".unregister"
-}, async (conn, m, msg, { reply }) => {
+}, async (bot, m) => {
 
-    const user = m.sender;
+    const senderNumber = m.sender.split("@")[0];
+    if (senderNumber !== allowedNumber)
+        return bot.sendMessage(m.from, { text: "❌ You are not allowed." }, { quoted: m });
+
     let db = loadDB();
+    if (!db.users.find(u => u.number === senderNumber))
+        return bot.sendMessage(m.from, { text: "⚠️ You are not registered!" }, { quoted: m });
 
-    if (!db.find(x => x.user === user))
-        return reply("⚠️ You are not registered yet!");
-
-    db = db.filter(x => x.user !== user);
+    db.users = db.users.filter(u => u.number !== senderNumber);
     saveDB(db);
 
-    reply("🗑️ Your profile has been successfully deleted!");
+    bot.sendMessage(m.from, { text: "🗑️ Your registration has been deleted!" }, { quoted: m });
 });
 
 
-// ==================================================
-// 📌 4. USERINFO (Check Another User)
-// ==================================================
+// ============================================
+// 4️⃣ USERINFO
+// ============================================
 cmd({
     pattern: "userinfo",
     desc: "Check another user's info",
     category: "main",
-    use: ".userinfo @tag"
-}, async (conn, m, msg, { reply }) => {
+}, async (bot, m) => {
+
+    const senderNumber = m.sender.split("@")[0];
+    if (senderNumber !== allowedNumber)
+        return bot.sendMessage(m.from, { text: "❌ You are not allowed." }, { quoted: m });
 
     const mention = m.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0];
-    if (!mention) return reply("❌ Tag a user!\nExample: .userinfo @user");
+    if (!mention) return bot.sendMessage(m.from, { text: "❌ Tag a user!" }, { quoted: m });
 
     const db = loadDB();
-    const data = db.find(x => x.user === mention);
+    const data = db.users.find(u => u.number === mention.split("@")[0]);
+    if (!data) return bot.sendMessage(m.from, { text: "❌ That user is not registered!" }, { quoted: m });
 
-    if (!data)
-        return reply("❌ That user is not registered!");
-
-    reply(
-`🧾 *USER PROFILE INFO*
-
-👤 Name: *${data.name}*
-🎂 Age: *${data.age}*
-⚧️ Gender: *${data.gender}*
-📲 Number: @${data.user.split("@")[0]}
-⏱️ Registered On: *${new Date(data.time).toLocaleString()}*
-`
-    );
+    bot.sendMessage(m.from, {
+        text: `🧾 USER INFO\n\n👤 Name: ${data.name}\n🎂 Age: ${data.age}\n⚧️ Gender: ${data.gender}\n📲 Number: ${data.number}\n⏱️ Registered On: ${new Date(data.regTime).toLocaleString()}`
+    }, { quoted: m });
 });
 
 
-// ==================================================
-// 📌 5. ALLUSERS (Show List of All Registered Users)
-// ==================================================
+// ============================================
+// 5️⃣ ALLUSERS
+// ============================================
 cmd({
     pattern: "allusers",
     desc: "Show all registered users",
     category: "main",
-    use: ".allusers"
-}, async (conn, m, msg, { reply }) => {
+}, async (bot, m) => {
+
+    const senderNumber = m.sender.split("@")[0];
+    if (senderNumber !== allowedNumber)
+        return bot.sendMessage(m.from, { text: "❌ You are not allowed." }, { quoted: m });
 
     const db = loadDB();
+    if (db.users.length === 0) return bot.sendMessage(m.from, { text: "📭 No registered users found!" }, { quoted: m });
 
-    if (db.length === 0)
-        return reply("📭 No registered users found!");
-
-    let txt = "📋 *ALL REGISTERED USERS*\n\n";
-
-    db.forEach((u, i) => {
-        txt += `• ${i + 1}. @${u.user.split("@")[0]} — *${u.name}*\n`;
+    let text = "📋 ALL REGISTERED USERS\n\n";
+    db.users.forEach((u, i) => {
+        text += `#${i + 1} 👤 ${u.name} | 📲 ${u.number}\n`;
     });
 
-    await conn.sendMessage(m.chat, {
-        text: txt,
-        mentions: db.map(u => u.user)
-    });
+    bot.sendMessage(m.from, { text }, { quoted: m });
 });
