@@ -146,7 +146,7 @@ await conn.sendMessage(from, {
 
       await conn.sendMessage(from, {
             audio: { url: 'https://files.catbox.moe/el1dgb.mp3' }, // Audio URL
-            mimetype: 'audio/mp4',
+            mimetype: 'audio/mpeg',
             ptt: true
         }, { quoted: mek });
         
