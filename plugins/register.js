@@ -3,7 +3,7 @@ const path = require("path");
 const { cmd } = require("../lib/command");
 
 // Database path
-const dbPath = path.join(__dirname, "../database/user.json");
+const dbPath = path.join(__dirname, "../data/user.json");
 
 // Create DB file if missing
 if (!fs.existsSync(dbPath)) {
