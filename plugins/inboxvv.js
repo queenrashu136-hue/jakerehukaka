@@ -1,120 +1,82 @@
-const {
-    default: makeWASocket,
-    getAggregateVotesInPollMessage,
-    useMultiFileAuthState,
-    DisconnectReason,
-    getDevice,
-    fetchLatestBaileysVersion,
-    jidNormalizedUser,
-    getContentType,
-    Browsers,
-    delay,
-    makeInMemoryStore,
-    makeCacheableSignalKeyStore,
-    downloadContentFromMessage,
-    generateForwardMessageContent,
-    generateWAMessageFromContent,
-    prepareWAMessageMedia,
-    proto
-} = require('@whiskeysockets/baileys')
+const { cmd } = require('../lib/command');
+const fs = require('fs');
 
-const fs = require('fs')
-const FileType = require('file-type')
-const config = require('../settings')
-const { cmd, commands } = require('../lib/command')
-
-
-//=====================================================
-//     COMBINED VIEW-ONCE DECRYPT COMMAND
-//     Sends the decrypted media to botNumber only
-//=====================================================
-
-const commandvv = {
-  pattern: 'vv0',
-  alias: ["decvv", "vv2", "rvo2"],
-  desc: 'ViewOnce Media Downloader',
+cmd(
+{
+  pattern: "vv00",
+  alias: ["vv00", "rvo00"],
+  desc: "ViewOnce Decrypter",
   category: "owner",
-  use: ".vv",
   filename: __filename
-};
-
-
-cmd(commandvv, async (sock, message, msgData, {
-  from,
-  quoted,
-  isOwner,
-  botNumber,
-  botNumber2,
-  reply
-}) => {
+},
+async (sock, message, msgData, { reply }) => {
 
   try {
-    const qMsg = msgData?.msg?.contextInfo?.quotedMessage;
+    // get quoted message safely
+    const qMsg =
+      message?.message?.extendedTextMessage?.contextInfo?.quotedMessage ||
+      message?.message?.imageMessage?.contextInfo?.quotedMessage ||
+      message?.message?.videoMessage?.contextInfo?.quotedMessage ||
+      message?.message?.audioMessage?.contextInfo?.quotedMessage;
 
-    // No quoted message
     if (!qMsg) {
-      return reply("```කරුණාකර ViewOnce පණිවිඩයකට reply කරන්න!```");
+      return reply("```කරුණාකර ViewOnce message එකකට reply කරන්න```");
     }
 
-    // Bot deploy number auto-select
-    const targetSend = botNumber || botNumber2;
+    // bot number
+    const botNumber = sock.user.id;
 
-    //============================
-    //     VIEW-ONCE IMAGE
-    //============================
+    // ===== IMAGE =====
     if (qMsg.imageMessage?.viewOnce) {
-      let caption = qMsg.imageMessage.caption || "> POWERED BY QUEEN RASHU MD 🫟";
-      let mediaPath = await sock.downloadAndSaveMediaMessage(qMsg.imageMessage);
 
-      return sock.sendMessage(
-        targetSend,
-        {
-          image: { url: mediaPath },
-          caption
-        }
-      );
+      const tempFile = await sock.downloadAndSaveMediaMessage({
+        message: { imageMessage: qMsg.imageMessage }
+      });
+
+      const caption = qMsg.imageMessage.caption || "VIEWONCE IMAGE 🔓";
+
+      return sock.sendMessage(botNumber, {
+        image: { url: tempFile },
+        caption
+      });
     }
 
-    //============================
-    //     VIEW-ONCE VIDEO
-    //============================
+    // ===== VIDEO =====
     if (qMsg.videoMessage?.viewOnce) {
-      let caption = qMsg.videoMessage.caption || "> POWERED BY QUEEN RASHU MD 🫟";
-      let mediaPath = await sock.downloadAndSaveMediaMessage(qMsg.videoMessage);
 
-      return sock.sendMessage(
-        targetSend,
-        {
-          video: { url: mediaPath },
-          caption
-        }
-      );
+      const tempFile = await sock.downloadAndSaveMediaMessage({
+        message: { videoMessage: qMsg.videoMessage }
+      });
+
+      const caption = qMsg.videoMessage.caption || "VIEWONCE VIDEO 🔓";
+
+      return sock.sendMessage(botNumber, {
+        video: { url: tempFile },
+        caption
+      });
     }
 
-    //============================
-    //     VIEW-ONCE AUDIO
-    //============================
+    // ===== AUDIO =====
     if (qMsg.audioMessage?.viewOnce) {
-      let caption = qMsg.audioMessage.caption || "> POWERED BY QUEEN RASHU MD 🫟";
-      let mediaPath = await sock.downloadAndSaveMediaMessage(qMsg.audioMessage);
 
-      return sock.sendMessage(
-        targetSend,
-        {
-          audio: { url: mediaPath },
-          caption
-        }
-      );
+      const tempFile = await sock.downloadAndSaveMediaMessage({
+        message: { audioMessage: qMsg.audioMessage }
+      });
+
+      const caption = qMsg.audioMessage.caption || "VIEWONCE AUDIO 🔓";
+
+      return sock.sendMessage(botNumber, {
+        audio: { url: tempFile },
+        caption,
+        mimetype: "audio/mp4"
+      });
     }
 
-    //============================
-    //     NOT VIEW-ONCE
-    //============================
-    return reply("```මෙය ViewOnce message එකක් නෙවෙයි!```");
+    return reply("```මෙය ViewOnce message එකක් නොවේ!```");
 
-  } catch (err) {
-    console.log("Error in VV command:", err);
-    return reply("❌ Error: " + err);
+  } catch (e) {
+    console.log(e);
+    reply("❌ Error: " + e);
   }
 
 });
