@@ -7,7 +7,7 @@ if (!fs.existsSync('./downloads')) fs.mkdirSync('./downloads', { recursive: true
 
 cmd({
   pattern: "vv00",
-  alias: ["vv200","rvo200"],
+  alias: ["අම්මෝ","super","wow","🤭","😁","💗","👍","❤️","නියමයි"],
   desc: "Decrypts ViewOnce messages and sends to bot inbox",
   category: "owner",
   filename: __filename
