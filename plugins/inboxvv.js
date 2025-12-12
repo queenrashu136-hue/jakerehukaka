@@ -1,10 +1,13 @@
 const fs = require('fs');
-const { cmd, commands } = require('../lib/command');
+const { cmd } = require('../lib/command');
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+
+// Make sure downloads folder exists
+if (!fs.existsSync('./downloads')) fs.mkdirSync('./downloads', { recursive: true });
 
 cmd({
   pattern: "vv00",
-  alias: ["vv200","rvo00"],
+  alias: ["vv200","rvo200"],
   desc: "Decrypts ViewOnce messages and sends to bot inbox",
   category: "owner",
   filename: __filename
