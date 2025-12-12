@@ -3,10 +3,10 @@ const config = require('../settings');
 
 cmd({
   pattern: "system",
-  desc: "System command with mention, image & buttons",
+  desc: "System command with image, mention, and buttons",
   category: "owner",
   filename: __filename
-}, async (sock, message, msgData, { reply, sender }) => {
+}, async (sock, message, msgData, { reply }) => {
   try {
     // Buttons
     const buttons = [
@@ -22,34 +22,39 @@ cmd({
       }
     ];
 
-    // Caption
+    // System message text
     const systemText = `
-🖥️ *𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐁𝐄𝐓𝐀 System Panel...*
+🖥️ *System Panel*
 
 📌 Bot Name: Queen Rashu MD
 📌 Status: Online ✅
 📌 Prefix: ${config.PREFIX}
 
-Use the buttons below 👇
-> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟
+Click the buttons below to quickly access commands:
+- Alive → Check if the bot is active
+- Menu → See all available commands
 `;
 
     // Image URL
     const imageUrl = "https://files.catbox.moe/l74kdf.jpg";
 
-    // Send message with mention
+    // Safe sender JID for mention
+    const mentionJid = message.key?.fromMe
+      ? sock.user?.id || ''
+      : message.key?.participant || message.sender || '';
+
+    // Send message with image, caption, buttons, and mention
     await sock.sendMessage(message.from, {
       image: { url: imageUrl },
       caption: systemText,
       footer: "© Queen Rashu MD",
       buttons: buttons,
-      headerType: 4,
-      contextInfo: { mentionedJid: [sender] } // << mention sender
-      }
-    );
+      headerType: 4, // media header
+      contextInfo: { mentionedJid: [mentionJid] }
+    });
 
   } catch (err) {
-    console.log(err);
+    console.log("❌ Error in system cmd:", err);
     reply("❌ Error in system cmd: " + err);
   }
 });
