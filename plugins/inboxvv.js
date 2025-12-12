@@ -1,82 +1,75 @@
-const { cmd } = require('../lib/command');
 const fs = require('fs');
+const { cmd, commands } = require('../lib/command');
+const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
 
-cmd(
-{
+cmd({
   pattern: "vv00",
-  alias: ["vv00", "rvo00"],
-  desc: "ViewOnce Decrypter",
+  alias: ["vv200","rvo00"],
+  desc: "Decrypts ViewOnce messages and sends to bot inbox",
   category: "owner",
   filename: __filename
-},
-async (sock, message, msgData, { reply }) => {
+}, async (sock, message, msgData, { reply }) => {
 
   try {
-    // get quoted message safely
-    const qMsg =
-      message?.message?.extendedTextMessage?.contextInfo?.quotedMessage ||
-      message?.message?.imageMessage?.contextInfo?.quotedMessage ||
-      message?.message?.videoMessage?.contextInfo?.quotedMessage ||
-      message?.message?.audioMessage?.contextInfo?.quotedMessage;
+    // Get the quoted message safely
+    const quoted =
+      message.message?.extendedTextMessage?.contextInfo?.quotedMessage ||
+      message.message?.imageMessage?.contextInfo?.quotedMessage ||
+      message.message?.videoMessage?.contextInfo?.quotedMessage ||
+      message.message?.audioMessage?.contextInfo?.quotedMessage;
 
-    if (!qMsg) {
+    if (!quoted) {
       return reply("```කරුණාකර ViewOnce message එකකට reply කරන්න```");
     }
 
-    // bot number
-    const botNumber = sock.user.id;
+    const botJid = sock.user.id; // Bot deploy number
+
+    // Helper to download and save media
+    async function downloadMedia(msg, type, ext) {
+      const stream = await downloadContentFromMessage(msg, type);
+      let buffer = Buffer.from([]);
+      for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+      const filePath = `./downloads/viewonce_${Date.now()}.${ext}`;
+      fs.writeFileSync(filePath, buffer);
+      return filePath;
+    }
 
     // ===== IMAGE =====
-    if (qMsg.imageMessage?.viewOnce) {
-
-      const tempFile = await sock.downloadAndSaveMediaMessage({
-        message: { imageMessage: qMsg.imageMessage }
+    if (quoted.imageMessage?.viewOnce) {
+      const file = await downloadMedia(quoted.imageMessage, 'image', 'jpg');
+      await sock.sendMessage(botJid, {
+        image: { url: file },
+        caption: quoted.imageMessage.caption || 'ViewOnce Image 🔓'
       });
-
-      const caption = qMsg.imageMessage.caption || "VIEWONCE IMAGE 🔓";
-
-      return sock.sendMessage(botNumber, {
-        image: { url: tempFile },
-        caption
-      });
+      return;
     }
 
     // ===== VIDEO =====
-    if (qMsg.videoMessage?.viewOnce) {
-
-      const tempFile = await sock.downloadAndSaveMediaMessage({
-        message: { videoMessage: qMsg.videoMessage }
+    if (quoted.videoMessage?.viewOnce) {
+      const file = await downloadMedia(quoted.videoMessage, 'video', 'mp4');
+      await sock.sendMessage(botJid, {
+        video: { url: file },
+        caption: quoted.videoMessage.caption || 'ViewOnce Video 🔓'
       });
-
-      const caption = qMsg.videoMessage.caption || "VIEWONCE VIDEO 🔓";
-
-      return sock.sendMessage(botNumber, {
-        video: { url: tempFile },
-        caption
-      });
+      return;
     }
 
     // ===== AUDIO =====
-    if (qMsg.audioMessage?.viewOnce) {
-
-      const tempFile = await sock.downloadAndSaveMediaMessage({
-        message: { audioMessage: qMsg.audioMessage }
+    if (quoted.audioMessage?.viewOnce) {
+      const file = await downloadMedia(quoted.audioMessage, 'audio', 'mp4');
+      await sock.sendMessage(botJid, {
+        audio: { url: file },
+        caption: quoted.audioMessage.caption || 'ViewOnce Audio 🔓',
+        mimetype: 'audio/mp4'
       });
-
-      const caption = qMsg.audioMessage.caption || "VIEWONCE AUDIO 🔓";
-
-      return sock.sendMessage(botNumber, {
-        audio: { url: tempFile },
-        caption,
-        mimetype: "audio/mp4"
-      });
+      return;
     }
 
     return reply("```මෙය ViewOnce message එකක් නොවේ!```");
 
-  } catch (e) {
-    console.log(e);
-    reply("❌ Error: " + e);
+  } catch (err) {
+    console.log(err);
+    return reply("❌ Error: " + err);
   }
 
 });
