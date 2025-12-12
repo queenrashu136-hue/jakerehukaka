@@ -38,10 +38,15 @@ Click the buttons below to quickly access commands:
     // Image URL
     const imageUrl = "https://files.catbox.moe/l74kdf.jpg";
 
-    // Safe sender JID for mention
-    const mentionJid = message.key?.fromMe
-      ? sock.user?.id || ''
-      : message.key?.participant || message.sender || '';
+    // Safe sender JID for mention (fallbacks included)
+    let mentionJid = '';
+    if (message.key?.fromMe) {
+      // If the message is sent by the bot itself
+      mentionJid = (sock.user && sock.user.id) ? sock.user.id : '';
+    } else {
+      // If the message is from another user
+      mentionJid = message.key?.participant || message.sender || '';
+    }
 
     // Send message with image, caption, buttons, and mention
     await sock.sendMessage(message.from, {
@@ -50,7 +55,7 @@ Click the buttons below to quickly access commands:
       footer: "© Queen Rashu MD",
       buttons: buttons,
       headerType: 4, // media header
-      contextInfo: { mentionedJid: [mentionJid] }
+      contextInfo: mentionJid ? { mentionedJid: [mentionJid] } : {}
     });
 
   } catch (err) {
