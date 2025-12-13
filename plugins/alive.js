@@ -19,22 +19,7 @@ cmd({
   try {
     await axios.get("https://raw.githubusercontent.com/CyberRushModz0/QueenRashu-Database/refs/heads/main/ditels.json");
 
-    const des = "*🪄 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐁𝐄𝐓𝐀 Alive Now...*
-
-*👋 Hye ${pushname} Manika .....❤️‍🩹🫂🪄*
-
-*╭─「 ꜱᴛᴀᴛᴜꜱ ᴅᴇᴛᴀɪʟꜱ 」*
-*│*👤 *User*: ${pushname}
-*│*🪀 *User Number*: ${senderNumber}
-*│*✒️ *Prefix*: .
-*│*🧬 *Version*: Beta 
-*│*🎈 *Platform*: 
-*│*📡 *Host*: ${os.hostname()}
-*│*📟 *Uptime*: ${runtime(process.uptime())}
-*│*📂 *Memory*: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
-*╰──────────●●►*
-
-> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟";
+    const des = "*🪄 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐁𝐄𝐓𝐀 Alive Now...*\n\n*👋 Hye ${pushname} Manika .....❤️‍🩹🫂🪄*\n\n*╭─「 ꜱᴛᴀᴛᴜꜱ ᴅᴇᴛᴀɪʟꜱ 」*\n*│*👤 *User*: ${pushname}\n*│*🪀 *User Number*: ${senderNumber}\n*│*✒️ *Prefix*: .\n*│*🧬 *Version*: Beta \n*│*🎈 *Platform*: \n*│*📡 *Host*: ${os.hostname()}\n*│*📟 *Uptime*: ${runtime(process.uptime())}\n*│*📂 *Memory*: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB\n*╰──────────●●►*\n\n> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟";
 
     await conn.sendMessage(from, {
       buttons: [
