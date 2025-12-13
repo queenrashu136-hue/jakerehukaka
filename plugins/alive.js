@@ -1,58 +1,27 @@
-const config = require("../settings");
-const prefix = config.PREFIX; // now hardcoded
+const os = require("os");
+const axios = require("axios");
+const { cmd, commands } = require("../lib/command");
+const { runtime, sleep } = require("../lib/functions");
 
-const mono = "```";
-const { cmd, commands } = require('../lib/command');
-const os = require('os');
-const fetch = require("node-fetch");
-const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, fetchJson , runtime , sleep, mode, formatTime } = require('../lib/functions');
-const moment = require("moment");
-
-let botStartTime = Date.now();
-
+// ===========================================
+//  TEST1 COMMAND – FIRST INSTANCE
+// ===========================================
 cmd({
-    pattern: "alive",
-    desc: "Check bot online or no.",
-    category: "main",
-    use: ".alive",
-    react: "👋",
-    filename: __filename
-}, 
-async (conn, mek, m, { from, pushname, reply }) => {
-    try {
-    
-    const senderNumber = m.sender.split("@")[0];
-        const senderName = pushname || "𝑸𝑼𝑬𝑬𝑵 𝑹𝑨𝑺𝑯𝑼 𝑴𝑫 𝑼𝑺𝑬𝑹";
+  pattern: "alive",
+  alias: ["help1", "status"],
+  desc: "Command list withalive button.",
+  category: "main",
+  use: ".alive",
+  react: "👋",
+  dontAddCommandList: true,
+  filename: __filename
+}, async (conn, m, msg, { from, prefix, pushname, reply }) => {
+  try {
+    await axios.get("https://raw.githubusercontent.com/CyberRushModz0/QueenRashu-Database/refs/heads/main/ditels.json");
 
-        // 🧠 Fake quoted message with user info
-        const fakeQuoted = {
-            key: {
-                fromMe: false,
-                participant: "0@s.whatsapp.net",
-                ...(from ? { remoteJid: "status@broadcast" } : {})
-            },
-            message: {
-                extendedTextMessage: {
-                    text: `👤 User: ${senderName}\n📱 Number: wa.me/${senderNumber}`,
-                    contextInfo: {
-                        forwardingScore: 999,
-                        isForwarded: true,
-                        externalAdReply: {
-                            title: "𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃",
-                            body: "© ᴅᴇᴠᴇʟᴏᴘ ʙʏ ɴɪᴘᴜɴ ʜᴀʀꜱʜᴀɴᴀ",
-                            mediaType: 1,
-                            thumbnailUrl: "https://files.catbox.moe/l74kdf.jpg",
-                            sourceUrl: "https://github.com/CyberRushModz0",
-                            renderLargerThumbnail: true
-                        }
-                    }
-                }
-            }
-        };
-        
-        let des = `*👋  𝐇𝐈, _${pushname}_  𝐈 𝐀𝐌 𝐀𝐋𝐈𝐕𝐄 𝐍𝐎𝐖 🪄🫂*
+    const des = "*🪄 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐁𝐄𝐓𝐀 Alive Now...*
 
-‼️𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝐁𝐄𝐓𝐀 ❤️‍🩹
+*👋 Hye ${pushname} Manika .....❤️‍🩹🫂🪄*
 
 *╭─「 ꜱᴛᴀᴛᴜꜱ ᴅᴇᴛᴀɪʟꜱ 」*
 *│*👤 *User*: ${pushname}
@@ -64,95 +33,44 @@ async (conn, mek, m, { from, pushname, reply }) => {
 *│*📟 *Uptime*: ${runtime(process.uptime())}
 *│*📂 *Memory*: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
 *╰──────────●●►*
-*╭─「 ʙᴏᴛ ɢɪᴛʜᴜʙ & ᴏᴛʜᴇʀ ɪɴꜰᴏ 」*
-*│*🫟 *GitHub*= https://github.com/CyberRushModz0
-*╰──────────●●►*
-*╭──────────●●►*
-*│* *Hello , I am alive now!!*
-*╰──────────●●►*`;
 
-await conn.sendMessage(from, {
-        video: {
-            url: 'https://github.com/CyberRushModz0/QueenRashu-Database/raw/refs/heads/main/InShot_20250719_221951156.mp4?raw=true'
-        },
-        mimetype: 'video/mp4',
-        ptv: true
-    }, { quoted: mek });
-    
-        await conn.sendMessage(from, {
-    buttons: [
+> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟";
+
+    await conn.sendMessage(from, {
+      buttons: [
         {
-            buttonId: `${prefix}menu`,
-            buttonText: { displayText: 'MENU' },
-            type: 1,
-        },
-        {
-            buttonId: `${prefix}ping`,
-            buttonText: { displayText: 'PING' },
-            type: 1,
-        },
-        {
-            buttonId: 'action',
-            buttonText: {
-                displayText: '📂 Menu Options'
-            },
-            type: 4,
-            nativeFlowInfo: {
-                name: 'single_select',
-                paramsJson: JSON.stringify({
-                    title: 'Click here 📂',
-                    sections: [
-                        {
-                            title: `‼️𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ❤️‍🩹`,
-                            highlight_label: '',
-                            rows: [
-                                {
-                                    title: 'MENU 📂',
-                                    description: '© ᴅᴇᴠᴇʟᴏᴘ ʙʏ ɴɪᴘᴜɴ ʜᴀʀꜱʜᴀɴᴀ',
-                                    id: `${prefix}menu`,
-                                },
-                                {
-                                    title: 'OWNER 🍁',
-                                    description: '> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟',
-                                    id: `${prefix}owner`,
-                                },
-                                {
-                                    title: 'PING 🫆',
-                                    description: '> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟',
-                                    id: `${prefix}ping`,
-                                },
-                                {
-                                    title: 'SYSTEM 🌐',
-                                    description: '> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟',
-                                    id: `${prefix}system`,
-                                },
-                                {
-                                    title: 'REPO 📌',
-                                    description: '> 𝙿𝙾𝚆𝙴𝚁𝙳 𝙱𝚈 𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 𝙾𝙵𝙲 🫟',
-                                    id: `${prefix}repo`,
-                                },
-                            ],
-                        },
-                    ],
-                }),
-            }
+          buttonId: 'action',
+          buttonText: { displayText: '📂 Menu Options' },
+          type: 4,
+          nativeFlowInfo: {
+            name: 'single_select',
+            paramsJson: JSON.stringify({
+              title: '𝐂𝐋𝐈𝐂𝐊 𝐇𝐄𝐑𝐄 🪄',
+              sections: [
+                {
+                  title: `‼️𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ❤️‍🩹`,
+                  rows: [
+                    { title: 'MENU 📖', description: 'ꜱʜᴏᴡ ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅ ᴘᴀɴᴇʟ', id: `${prefix}menu` },
+                    { title: 'PING 🔮', description: 'ꜱʜᴏᴡ ᴛᴇꜱᴛ ʙᴏᴛ ꜱᴘᴇᴇᴅ', id: `${prefix}ping` },
+                    { title: 'OWNER 👑', description: 'ᴄᴏɴᴛᴀᴄᴛ ʙᴏᴛ ᴏᴡɴᴇʀ', id: `${prefix}owner` },
+                    { title: 'SYSTEM 🕹️', description: 'ꜱʜᴏᴡ ʙᴏᴛ ꜱʏꜱᴛᴇᴍ ᴘᴀɴᴇʟ', id: `${prefix}thamilrashu` },
+                  ]
+                }
+              ]
+            })
+          }
         }
-    ],
-    headerType: 1,
-    viewOnce: true,
-    image: { url: "https://files.catbox.moe/l74kdf.jpg" },
-    caption: des,
-}, { quoted: fakeQuoted });
+      ],
+      headerType: 1,
+      viewOnce: true,
+      image: { url: "https://files.catbox.moe/l74kdf.jpg" },
+      caption: des
+    }, { quoted: m });
 
-      await conn.sendMessage(from, {
-            audio: { url: 'https://github.com/queenrashu136-hue/detabaseone/blob/70b76b6592b805a269e1b57b424e4dfdb01ce3bf/menu.mp3' }, // Audio URL
-            mimetype: 'audio/mp3',
-            ptt: true
-        }, { quoted: mek });
-        
-    } catch (e) {
-        console.error(e);
-        await conn.sendMessage(from, { react: { text: '❌', key: m.key } });
-        reply('❌ An error occurred while processing your request.');
-    }
+  } catch (err) {
+    console.error(err);
+    reply("❌ Error occurred while generating menu.");
+  }
 });
+
+
