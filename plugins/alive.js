@@ -146,7 +146,7 @@ await conn.sendMessage(from, {
 
       await conn.sendMessage(from, {
             audio: { url: 'https://github.com/queenrashu136-hue/detabaseone/blob/70b76b6592b805a269e1b57b424e4dfdb01ce3bf/menu.mp3' }, // Audio URL
-            mimetype: 'audio/mpeg',
+            mimetype: 'audio/mp3',
             ptt: true
         }, { quoted: mek });
         
