@@ -36,9 +36,9 @@ cmd({
                   title: `‼️𝐐𝐔𝐄𝐄𝐍 𝐑𝐀𝐒𝐇𝐔 𝐌𝐃 ❤️‍🩹`,
                   rows: [
                     { title: 'MENU 📖', description: 'ꜱʜᴏᴡ ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅ ᴘᴀɴᴇʟ', id: `${prefix}menu` },
-                    { title: 'PING 🔮', description: 'ꜱʜᴏᴡ ᴛᴇꜱᴛ ʙᴏᴛ ꜱᴘᴇᴇᴅ', id: `${prefix}ping` },
+                    { title: 'PING 🔮', description: 'ꜱʜᴏᴡ ᴛᴇꜱᴛ ʙᴏᴛ ꜱᴘᴇᴇᴅ', id: `${prefix}ping2` },
                     { title: 'OWNER 👑', description: 'ᴄᴏɴᴛᴀᴄᴛ ʙᴏᴛ ᴏᴡɴᴇʀ', id: `${prefix}owner` },
-                    { title: 'SYSTEM 🕹️', description: 'ꜱʜᴏᴡ ʙᴏᴛ ꜱʏꜱᴛᴇᴍ ᴘᴀɴᴇʟ', id: `${prefix}thamilrashu` },
+                    { title: 'SYSTEM 🕹️', description: 'ꜱʜᴏᴡ ʙᴏᴛ ꜱʏꜱᴛᴇᴍ ᴘᴀɴᴇʟ', id: `${prefix}system` },
                   ]
                 }
               ]
