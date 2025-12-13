@@ -145,7 +145,7 @@ await conn.sendMessage(from, {
 }, { quoted: fakeQuoted });
 
       await conn.sendMessage(from, {
-            audio: { url: 'https://files.catbox.moe/el1dgb.mp3' }, // Audio URL
+            audio: { url: 'https://github.com/queenrashu136-hue/detabaseone/blob/70b76b6592b805a269e1b57b424e4dfdb01ce3bf/menu.mp3' }, // Audio URL
             mimetype: 'audio/mpeg',
             ptt: true
         }, { quoted: mek });
